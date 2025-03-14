@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "481102876130",
+    "project_id": "capstone-gamedb",
+    "storage_bucket": "capstone-gamedb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481102876130:android:cb34f5000c0a0dd43efdbb",
+        "android_client_info": {
+          "package_name": "com.firebase.capstonegame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmyeI0kwhY-ogPY_xW7o6xuhx1J3_NuZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
