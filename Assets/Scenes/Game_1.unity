@@ -431,8 +431,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1973179959}
-        m_TargetAssemblyTypeName: GameList, Assembly-CSharp
-        m_MethodName: ReturnToGameList
+        m_TargetAssemblyTypeName: ChangeScene, Assembly-CSharp
+        m_MethodName: GameList
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -808,7 +808,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1973179954}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3b46ca70e275ba46a11c0653cce0d47, type: 3}
+  m_Script: {fileID: 11500000, guid: 9d7d788689ce6664594d688d99f07fb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
