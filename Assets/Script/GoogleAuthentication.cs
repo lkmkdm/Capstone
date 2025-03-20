@@ -7,6 +7,9 @@ using Google;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
 using System.Net;
+using Firebase;
+using Firebase.Extensions;
+using Firebase.Auth; // Firebase 인증을 위한 네임스페이스 추가
 
 public class GoogleAuthentication : MonoBehaviour
 {
@@ -17,8 +20,17 @@ public class GoogleAuthentication : MonoBehaviour
     private GoogleSignInConfiguration configuration;
     public string webClientId = "481102876130-ci87efh89dkoodbp5fiemqd250lrplgs.apps.googleusercontent.com";
 
+    private FirebaseAuth auth; // Firebase 인증 객체
+
     void Awake()
     {
+        // Firebase 초기화
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+        {
+            FirebaseApp firebaseApp = FirebaseApp.DefaultInstance;
+            auth = FirebaseAuth.DefaultInstance;
+        });
+
         configuration = new GoogleSignInConfiguration
         {
             WebClientId = webClientId,
@@ -61,6 +73,9 @@ public class GoogleAuthentication : MonoBehaviour
         else
         {
             StartCoroutine(UpdateUI(task.Result));
+
+            // Firebase 인증
+            AuthenticateWithFirebase(task.Result);
         }
     }
 
@@ -84,6 +99,31 @@ public class GoogleAuthentication : MonoBehaviour
         profilePic.sprite = Sprite.Create(downloadedTexture, rect, pivot);
     }
 
+    // Firebase 인증 함수
+    private void AuthenticateWithFirebase(GoogleSignInUser googleUser)
+    {
+        string idToken = googleUser.IdToken;
+
+        Credential credential = GoogleAuthProvider.GetCredential(idToken, null);
+        auth.SignInWithCredentialAsync(credential).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("Sign-in with Firebase was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Sign-in with Firebase failed: " + task.Exception);
+                return;
+            }
+
+            FirebaseUser newUser = task.Result;
+            Debug.Log("User signed in successfully: " + newUser.DisplayName);
+        });
+    }
+
+
     public void OnSignOut()
     {
         userNameTxt.text = "";
@@ -93,6 +133,11 @@ public class GoogleAuthentication : MonoBehaviour
         loginPanel.SetActive(true);
         profilePanel.SetActive(false);
         Debug.Log("Calling SignOut");
+
+        // Firebase에서 로그아웃
+        auth.SignOut();
+
+        // Google 로그인에서 로그아웃
         GoogleSignIn.DefaultInstance.SignOut();
     }
 
