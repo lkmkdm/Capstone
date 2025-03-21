@@ -12,4 +12,23 @@ public class ChangeScene : MonoBehaviour
     {
         SceneManager.LoadScene("Game_1");
     }
+
+    // Scene -> AdhdTest Scene
+    public void GoToAdhdTest()
+    {
+        SceneManager.LoadScene("AdhdTest");
+    }
+
+    // Scene -> ServiceContent Scene
+    public void GoToServiceContent()
+    {
+        SceneManager.LoadScene("ServiceContent");
+    }
+
+    // Scene -> GoogleSignIn Scene
+    public void GoToGoogleSignIn()
+    {
+        SceneManager.LoadScene("GoogleSignIn");
+    }
+
 }
