@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 69632097}
   - component: {fileID: 69632096}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: pentagon_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 396535116}
   - component: {fileID: 396535115}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: pentagon_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -360,7 +360,7 @@ GameObject:
   - component: {fileID: 833496470}
   - component: {fileID: 833496469}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: pentagon_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -478,6 +478,8 @@ MonoBehaviour:
   lineColor: {r: 0, g: 0, b: 0, a: 1}
   lineWidth: 0.05
   fillColor: {r: 1, g: 0.5, b: 0.5, a: 0.5}
+  pointSize: 0.1
+  pointColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1297093617
 GameObject:
   m_ObjectHideFlags: 0
@@ -567,7 +569,7 @@ GameObject:
   - component: {fileID: 1304389241}
   - component: {fileID: 1304389240}
   m_Layer: 5
-  m_Name: Image (4)
+  m_Name: pentagon_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1047,7 +1049,7 @@ GameObject:
   - component: {fileID: 1844518096}
   - component: {fileID: 1844518095}
   m_Layer: 5
-  m_Name: Image
+  m_Name: pentagon_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

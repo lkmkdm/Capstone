@@ -12,10 +12,14 @@ public class RadarChart : MonoBehaviour
     public float lineWidth = 0.05f; // 선 두께
     public Color fillColor = new Color(1f, 0.5f, 0.5f, 0.5f); // 내부 색상
 
+    public float pointSize = 0.1f; // 점 크기
+    public Color pointColor = Color.red; // 점 색상
+
     private LineRenderer lineRenderer;
     private MeshFilter meshFilter;
     private MeshRenderer meshRenderer;
     private FirebaseFirestore db;
+    private GameObject[] points = new GameObject[5]; // 꼭짓점 점들
 
     void Start()
     {
@@ -45,6 +49,18 @@ public class RadarChart : MonoBehaviour
         lineRenderer.endWidth = lineWidth;
         lineRenderer.useWorldSpace = false;
 
+        // 꼭짓점 점 생성
+        for (int i = 0; i < 5; i++)
+        {
+            if (points[i] == null)
+            {
+                points[i] = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                points[i].transform.SetParent(transform);
+                points[i].transform.localScale = Vector3.one * pointSize;
+                points[i].GetComponent<Renderer>().material.color = pointColor;
+            }
+        }
+
         UpdateGraph();
     }
 
@@ -72,6 +88,14 @@ public class RadarChart : MonoBehaviour
         mesh.triangles = new int[] { 0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 1 };
         mesh.RecalculateNormals();
         meshFilter.mesh = mesh;
+
+        // 점 위치 및 스타일 업데이트
+        for (int i = 0; i < 5; i++)
+        {
+            points[i].transform.localPosition = vertices[i];
+            points[i].transform.localScale = Vector3.one * pointSize;
+            points[i].GetComponent<Renderer>().material.color = pointColor;
+        }
     }
 
     void LoadDataFromFirebase()
