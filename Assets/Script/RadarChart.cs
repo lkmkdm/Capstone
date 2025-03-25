@@ -1,11 +1,13 @@
 using UnityEngine;
 using Firebase.Firestore;
 using Firebase.Extensions;
+using System.Collections;
 using System.Collections.Generic;
 
 public class RadarChart : MonoBehaviour
 {
     public float[] values = new float[5]; // 5개 지표
+    private float[] currentValues = new float[5]; // 애니메이션용 현재 값
     public float maxValue = 100f; // 최대값
     public float graphSize = 5f; // 그래프 크기
     public Color lineColor = Color.black; // 선 색상
@@ -22,11 +24,6 @@ public class RadarChart : MonoBehaviour
         db = FirebaseFirestore.DefaultInstance;
         DrawGraph();
         LoadDataFromFirebase();
-    }
-
-    void Update()
-    {
-        UpdateGraph();
     }
 
     void DrawGraph()
@@ -52,12 +49,12 @@ public class RadarChart : MonoBehaviour
     {
         Vector3[] vertices = new Vector3[5];
         float angleOffset = 72f; // 360도 / 5 (오각형)
-        float rotationOffset = 18f; // 꼭짓점을 위로 맞추기 위해 -18도 회전
+        float rotationOffset = 18f; // 꼭짓점을 위로 맞추기 위해 18도 회전
 
         for (int i = 0; i < 5; i++)
         {
             float angle = Mathf.Deg2Rad * (angleOffset * i + rotationOffset);
-            float normalizedValue = values[i] / maxValue;
+            float normalizedValue = currentValues[i] / maxValue;
             float radius = graphSize * normalizedValue;
             vertices[i] = new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0);
         }
@@ -83,20 +80,48 @@ public class RadarChart : MonoBehaviour
                 DocumentSnapshot snapshot = task.Result;
                 Dictionary<string, object> data = snapshot.ToDictionary();
 
-                // Firebase에서 데이터 가져와서 values 배열에 저장
+                // 목표 값 설정
                 values[0] = GetValueFromDict(data, "memory");
                 values[1] = GetValueFromDict(data, "concentration");
                 values[2] = GetValueFromDict(data, "processing speed");
                 values[3] = GetValueFromDict(data, "impulsiveness");
                 values[4] = GetValueFromDict(data, "accuracy");
 
-                UpdateGraph();
+                // 애니메이션 시작
+                StartCoroutine(AnimateGraph());
             }
             else
             {
                 Debug.LogError("Firebase 데이터 불러오기 실패");
             }
         });
+    }
+
+    IEnumerator AnimateGraph()
+    {
+        float duration = 1.0f;
+        float elapsed = 0f;
+        float[] startValues = new float[5];
+
+        for (int i = 0; i < 5; i++)
+            startValues[i] = 0f; // 0부터 시작
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            for (int i = 0; i < 5; i++)
+            {
+                currentValues[i] = Mathf.Lerp(startValues[i], values[i], elapsed / duration);
+            }
+            UpdateGraph();
+            yield return null;
+        }
+
+        // 최종 값 설정
+        for (int i = 0; i < 5; i++)
+            currentValues[i] = values[i];
+
+        UpdateGraph();
     }
 
     float GetValueFromDict(Dictionary<string, object> data, string key)
