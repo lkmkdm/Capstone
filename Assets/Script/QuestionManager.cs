@@ -16,6 +16,8 @@ public class QuestionManager : MonoBehaviour
     public GameObject testPanel2; // 질문 패널 (TestPanel2)
 
     public Slider progressSlider; // 설문 진행률을 나타낼 슬라이더
+    public TMP_Text progressText; // 진행률 퍼센트 텍스트
+    public Image progressFill; // 슬라이더 Fill 이미지 (색상 변경용)
 
     private List<int> questionOrder = new List<int>(); // 랜덤 순서 저장
     private List<GameObject> questionPanels = new List<GameObject>(); // 생성된 패널 리스트
@@ -160,6 +162,11 @@ public class QuestionManager : MonoBehaviour
         // 슬라이더 값 갱신
         float progress = (float)(currentQuestionIndex + 1) / questionOrder.Count;
         progressSlider.value = progress;
+
+        // 슬라이더 효과 관련
+        int percentValue = Mathf.RoundToInt(progress * 100);
+        progressText.text = percentValue + "%";
+        progressFill.color = Color.Lerp(Color.red, Color.green, progress);
 
         UpdateButtons();
     }
