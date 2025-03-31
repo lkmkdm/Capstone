@@ -1,23 +1,41 @@
 using UnityEngine;
-using UnityEngine.UI;
-using System.Collections.Generic;
+using Firebase;
+using Firebase.Auth;
+using Firebase.Firestore;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
 
 public class QuestionManager : MonoBehaviour
 {
+    FirebaseFirestore db;
+    FirebaseAuth auth;
+
+    private string userEmail;
+    private string userID;
+    private string userName;
+
+    public string selectedGender = "Male"; // 기본값
+    public int selectedAge = 0; // 드롭다운에서 선택된 값
+    public string difficulty = "normal"; // 기본값
+
+    // 설문 조사 관련 변수들
     public GameObject questionPrefab; // 질문 패널 프리팹
     public Transform content; // Content (빈 Panel)
-
     public Button nextButton2, prevButton; // 다음, 이전 버튼
     private TMP_Text nextButtonText; // "완료" 버튼
-
     public GameObject testPanel1; // 성별 & 나이 입력 패널 (TestPanel1)
     public GameObject testPanel2; // 질문 패널 (TestPanel2)
-
     public Slider progressSlider; // 설문 진행률을 나타낼 슬라이더
     public TMP_Text progressText; // 진행률 퍼센트 텍스트
     public Image progressFill; // 슬라이더 Fill 이미지 (색상 변경용)
+    public Button womenButton, manButton; // 성별 버튼
+    public TMP_Dropdown ageDropdown; // 나이 선택 드롭다운
+
+    private string gender = ""; // 성별 값 저장
+    private int age = 0; // 나이 값 저장
 
     private List<int> questionOrder = new List<int>(); // 랜덤 순서 저장
     private List<GameObject> questionPanels = new List<GameObject>(); // 생성된 패널 리스트
@@ -57,8 +75,21 @@ public class QuestionManager : MonoBehaviour
 
     private List<int> selectedButtonIndices = new List<int>(); // 선택된 버튼 인덱스 저장
 
+
     void Start()
     {
+        // Firebase 초기화
+        db = FirebaseFirestore.DefaultInstance;
+        auth = FirebaseAuth.DefaultInstance;
+
+        // Firebase에서 사용자 정보 가져오기
+        if (auth.CurrentUser != null)
+        {
+            userEmail = auth.CurrentUser.Email;
+            userID = auth.CurrentUser.UserId;
+            userName = auth.CurrentUser.DisplayName;
+        }
+
         nextButtonText = nextButton2.GetComponentInChildren<TMP_Text>(); // 버튼 내부 텍스트 가져오기
 
         ShuffleQuestions(); // 질문을 랜덤으로 섞기
@@ -69,11 +100,31 @@ public class QuestionManager : MonoBehaviour
         GenerateQuestionPanel();
         UpdateButtons();
 
+
+        // 성별 나이 이벤트 추가
+        womenButton.onClick.AddListener(() => SelectGender("Female"));
+        manButton.onClick.AddListener(() => SelectGender("Male"));
+        ageDropdown.onValueChanged.AddListener(delegate { UpdateAge(); });
+
         // 버튼 클릭 이벤트 추가
         nextButton2.onClick.AddListener(ShowNextQuestion);
         prevButton.onClick.AddListener(ShowPreviousQuestion);
 
         nextButton2.interactable = false; // 처음엔 비활성화
+    }
+
+    // 성별 버튼 클릭 시 호출되는 함수
+    void SelectGender(string selectedGender)
+    {
+        gender = selectedGender;
+        womenButton.image.color = (gender == "Female") ? Color.green : Color.white;
+        manButton.image.color = (gender == "Male") ? Color.green : Color.white;
+    }
+
+    // 나이 드롭다운 값 변경 시 호출되는 함수
+    void UpdateAge()
+    {
+        age = int.Parse(ageDropdown.options[ageDropdown.value].text);
     }
 
     // 질문 리스트를 랜덤으로 섞기
@@ -217,9 +268,52 @@ public class QuestionManager : MonoBehaviour
         }
     }
 
+    // 설문 완료 후 저장
     void FinishTest()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("UserInfo"); // 씬 이동
+        selectedGender = gender;
+        selectedAge = age;
+        SaveUserData();
+        SceneManager.LoadScene("UserInfo");
+
+        SceneManager.LoadScene("UserInfo"); // 씬 이동
+    }
+
+    // Firebase에 사용자 데이터 저장
+    void SaveUserData()
+    {
+        if (string.IsNullOrEmpty(userEmail) || string.IsNullOrEmpty(userID))
+        {
+            Debug.LogError("유저 정보가 없습니다. 로그인 상태를 확인하세요.");
+            return;
+        }
+
+        DocumentReference userDocRef = db
+            .Collection("users")
+            .Document(userEmail)
+            .Collection("personal_information")
+            .Document("info");
+
+        var userData = new
+        {
+            age = selectedAge,
+            difficulty = difficulty,
+            gender = selectedGender,
+            name = userName,
+            userid = userID
+        };
+
+        userDocRef.SetAsync(userData).ContinueWith(task =>
+        {
+            if (task.IsCompletedSuccessfully)
+            {
+                Debug.Log("Firestore에 사용자 데이터 저장 성공!");
+            }
+            else
+            {
+                Debug.LogError("Firestore 데이터 저장 실패: " + task.Exception);
+            }
+        });
     }
 
     // 버튼 활성화/비활성화 관리
