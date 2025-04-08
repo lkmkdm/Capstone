@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ce6d0ccd7b1a46348b21f86066c07950
+guid: 2b781219550c8e04ca61c79818b7c863
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5698101218374806946
-    second: android_light_rd_na@4x_0
+      213: -8884225813847394623
+    second: "\u2014Pngtree\u2014motion stripes light_4773767_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: android_light_rd_na@4x_0
+      name: "\u2014Pngtree\u2014motion stripes light_4773767_0"
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 160
-        height: 160
+        x: 349
+        y: 408
+        width: 428
+        height: 615
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2ad63774ed8b31f40800000000000000
-      internalID: 5698101218374806946
+      spriteID: 1c6354561b3e4b480800000000000000
+      internalID: -8884225813847394623
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 002dfb287190d3c41a6628ee6bdace20
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      android_light_rd_na@4x_0: 5698101218374806946
+      "\u2014Pngtree\u2014motion stripes light_4773767_0": -8884225813847394623
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

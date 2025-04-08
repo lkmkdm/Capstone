@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ce6d0ccd7b1a46348b21f86066c07950
+guid: d9034e8666bdbc349989904205073a2e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5698101218374806946
-    second: android_light_rd_na@4x_0
+      213: 6767476358159267246
+    second: "\u2014Pngtree\u2014shadow border overlay abstract gradient_7788448_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,23 +126,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: android_light_rd_na@4x_0
+      name: "\u2014Pngtree\u2014shadow border overlay abstract gradient_7788448_0"
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 160
-        height: 160
+        x: 107
+        y: 563
+        width: 964
+        height: 476
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2ad63774ed8b31f40800000000000000
-      internalID: 5698101218374806946
+      spriteID: ea5ffe164e7eaed50800000000000000
+      internalID: 6767476358159267246
       vertices: []
       indices: 
       edges: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 83be69be25a2dec4999aab7a5ee6c1cb
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      android_light_rd_na@4x_0: 5698101218374806946
+      "\u2014Pngtree\u2014shadow border overlay abstract gradient_7788448_0": 6767476358159267246
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
