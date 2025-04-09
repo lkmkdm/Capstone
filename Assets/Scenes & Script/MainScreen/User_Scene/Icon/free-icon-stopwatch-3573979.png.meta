@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      free-icon-stopwatch-3573979_0: -5667737650554133411
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

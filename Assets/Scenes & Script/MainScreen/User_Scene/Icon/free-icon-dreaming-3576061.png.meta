@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      free-icon-dreaming-3576061_0: 8318556663693333468
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

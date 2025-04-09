@@ -15,6 +15,12 @@ EditorBuildSettings:
     path: Assets/Scenes & Script/AdhdTest/AdhdTest.unity
     guid: cdad7bc2c6dc5034ead7e78589e6de8e
   - enabled: 1
+    path: Assets/Scenes & Script/Loading/Analyzing.unity
+    guid: 50c2fa0c7b77501499d91dc5fd12258b
+  - enabled: 1
+    path: Assets/Scenes & Script/AbilityGraph/UserInfo.unity
+    guid: 2988a17977b9a5c4bbaee3540b6f420e
+  - enabled: 1
     path: Assets/Scenes & Script/BottomBar/BottomBar.unity
     guid: b95beccb968a81849a273eb3cddcaf3b
   - enabled: 1
@@ -26,13 +32,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes & Script/MainScreen/MainScreen.unity
     guid: c9660e8052b4aa9429d7c7d708102677
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes & Script/BottomBar/Games.unity
     guid: 74b9fd65657989b4f82a821e1897b375
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes & Script/BottomBar/User.unity
     guid: b7796b7cb2b1c7a4d9707f46893df4f7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes & Script/BottomBar/Settings.unity
     guid: 1b1eb87c5d040074080a23c6aa5f59c7
   m_configObjects:

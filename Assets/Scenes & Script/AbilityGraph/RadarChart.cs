@@ -3,110 +3,135 @@ using Firebase.Firestore;
 using Firebase.Extensions;
 using System.Collections;
 using System.Collections.Generic;
+using Firebase.Auth;
 
+[RequireComponent(typeof(LineRenderer), typeof(MeshFilter), typeof(MeshRenderer))]
 public class RadarChart : MonoBehaviour
 {
+    FirebaseFirestore db;
+    FirebaseAuth auth;
+
+    private string userEmail;
+    private string userID;
+    private string userName;
+
     public float[] values = new float[5]; // 5개 지표
     private float[] currentValues = new float[5]; // 애니메이션용 현재 값
-    public float maxValue = 100f; // 최대값
-    public float graphSize = 5f; // 그래프 크기
-    public Color lineColor = Color.black; // 선 색상
-    public float lineWidth = 0.05f; // 선 두께
-    public Color fillColor = new Color(1f, 0.5f, 0.5f, 0.5f); // 내부 색상
+    public float maxValue = 1f; // 최대값
 
-    private LineRenderer lineRenderer;
+    private LineRenderer lineRenderer;  // 선을 그릴 LineRenderer
+    private Vector3[] baseVertices = new Vector3[5];  // 기본 오각형 꼭짓점 좌표
+
     private MeshFilter meshFilter;
-    private MeshRenderer meshRenderer;
-    private FirebaseFirestore db;
+    private Mesh mesh;
+    private Material meshMaterial;
 
     void Start()
     {
         db = FirebaseFirestore.DefaultInstance;
-        DrawGraph();
+        auth = FirebaseAuth.DefaultInstance;
+
+        //테스트용 
+        //userEmail = "testuser@example.com";
+
+        if (auth.CurrentUser != null)
+        {
+            userEmail = auth.CurrentUser.Email;
+            userID = auth.CurrentUser.UserId;
+            userName = auth.CurrentUser.DisplayName;
+        }
+        else
+        {
+            Debug.LogError("Firebase Authentication: 로그인된 사용자가 없습니다!");
+        }
+
+        // LineRenderer 및 MeshFilter 초기화
+        lineRenderer = GetComponent<LineRenderer>();
+        meshFilter = GetComponent<MeshFilter>();
+
+        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
+        if (meshRenderer != null)
+        {
+            meshRenderer.enabled = true;
+        }
+
+        lineRenderer.positionCount = 6;
+        lineRenderer.startWidth = 5f;
+        lineRenderer.endWidth = 5f;
+        lineRenderer.useWorldSpace = false;
+
+        Color semiTransparentCyan = new Color(1f, 0.5f, 0.5f, 0.3f);
+        lineRenderer.startColor = semiTransparentCyan;
+        lineRenderer.endColor = semiTransparentCyan;
+
+        lineRenderer.material = new Material(Shader.Find("Custom/TransparentShader"));
+
+        meshMaterial = new Material(Shader.Find("Custom/TransparentShader"));
+        meshMaterial.color = semiTransparentCyan;
+
+        meshRenderer.material = meshMaterial;
+
+        mesh = new Mesh();
+        meshFilter.mesh = mesh;
+
+        SetupBaseVertices();
         LoadDataFromFirebase();
     }
 
-    void DrawGraph()
+    void SetupBaseVertices()
     {
-        if (lineRenderer == null) lineRenderer = gameObject.AddComponent<LineRenderer>();
-        if (meshFilter == null) meshFilter = gameObject.AddComponent<MeshFilter>();
-        if (meshRenderer == null) meshRenderer = gameObject.AddComponent<MeshRenderer>();
-
-        meshRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        meshRenderer.material.color = fillColor;
-
-        lineRenderer.loop = true;
-        lineRenderer.startColor = lineColor;
-        lineRenderer.endColor = lineColor;
-        lineRenderer.startWidth = lineWidth;
-        lineRenderer.endWidth = lineWidth;
-        lineRenderer.useWorldSpace = false;
-
-        UpdateGraph();
-    }
-
-    void UpdateGraph()
-    {
-        Vector3[] vertices = new Vector3[5];
-        float angleOffset = 72f; // 360도 / 5 (오각형)
-        float rotationOffset = 18f; // 꼭짓점을 위로 맞추기 위해 18도 회전
+        float angle = Mathf.PI * 2f / 5f;  // 360도 / 5 (오각형)
 
         for (int i = 0; i < 5; i++)
         {
-            float angle = Mathf.Deg2Rad * (angleOffset * i + rotationOffset);
-            float normalizedValue = currentValues[i] / maxValue;
-            float radius = graphSize * normalizedValue;
-            vertices[i] = new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0);
+            float x = Mathf.Sin(i * angle); // X축 방향
+            float y = Mathf.Cos(i * angle); // Y축 방향
+            baseVertices[i] = new Vector3(x, y, 0);
         }
-
-        // 외곽선 업데이트
-        lineRenderer.positionCount = 6;
-        lineRenderer.SetPositions(new Vector3[] { vertices[0], vertices[1], vertices[2], vertices[3], vertices[4], vertices[0] });
-
-        // 내부 색칠 업데이트
-        Mesh mesh = new Mesh();
-        mesh.vertices = new Vector3[] { Vector3.zero, vertices[0], vertices[1], vertices[2], vertices[3], vertices[4] };
-        mesh.triangles = new int[] { 0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 1 };
-        mesh.RecalculateNormals();
-        meshFilter.mesh = mesh;
     }
 
     void LoadDataFromFirebase()
     {
-        db.Collection("users").Document("testuser@example.com").Collection("ability").Document("current")
-        .GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        if (string.IsNullOrEmpty(userEmail))
         {
-            if (task.IsCompleted && task.Result.Exists)
-            {
-                DocumentSnapshot snapshot = task.Result;
-                Dictionary<string, object> data = snapshot.ToDictionary();
+            Debug.LogError("유저 이메일이 설정되지 않음");
+            return;
+        }
 
-                // 목표 값 설정
-                values[0] = GetValueFromDict(data, "memory");
-                values[1] = GetValueFromDict(data, "concentration");
-                values[2] = GetValueFromDict(data, "processingspeed"); // 공백 제거
-                values[3] = GetValueFromDict(data, "impulsiveness");
-                values[4] = GetValueFromDict(data, "accuracy");
+        db.Collection("users").Document(userEmail)
+          .Collection("personal_information").Document("original_ability")
+          .GetSnapshotAsync().ContinueWithOnMainThread(task =>
+          {
+              if (task.IsCompleted && task.Result.Exists)
+              {
+                  DocumentSnapshot snapshot = task.Result;
+                  Dictionary<string, object> data = snapshot.ToDictionary();
 
-                // 애니메이션 시작
-                StartCoroutine(AnimateGraph());
-            }
-            else
-            {
-                Debug.LogError("Firebase 데이터 불러오기 실패");
-            }
-        });
+                  values[0] = GetValueFromDict(data, "original_concentration");
+                  values[1] = GetValueFromDict(data, "original_impulsiveness");
+                  values[2] = GetValueFromDict(data, "original_memory");
+                  values[3] = GetValueFromDict(data, "original_potential");
+                  values[4] = GetValueFromDict(data, "original_processingspeed");
+
+                  StartCoroutine(AnimateGraph());
+              }
+              else
+              {
+                  Debug.LogError("Firebase 데이터 불러오기 실패 또는 문서 없음");
+              }
+          });
     }
-
 
     IEnumerator AnimateGraph()
     {
-        float duration = 1.0f;
+        maxValue = 100f;
+
+        float duration = 3.0f;
         float elapsed = 0f;
         float[] startValues = new float[5];
 
         for (int i = 0; i < 5; i++)
-            startValues[i] = 0f; // 0부터 시작
+            startValues[i] = 0f;
 
         while (elapsed < duration)
         {
@@ -119,11 +144,52 @@ public class RadarChart : MonoBehaviour
             yield return null;
         }
 
-        // 최종 값 설정
         for (int i = 0; i < 5; i++)
             currentValues[i] = values[i];
 
         UpdateGraph();
+    }
+
+    void UpdateGraph()
+    {
+        Vector3[] newVertices = new Vector3[6];
+
+        float chartRadius = 270f;  // 오각형 외곽 크기에 맞게 조절..이게 최선임(Pentagon들 Pos Y 값은 25로 설정)
+
+        for (int i = 0; i < 5; i++)
+        {
+            float scale = currentValues[i] / maxValue;
+            newVertices[i] = baseVertices[i] * scale * chartRadius;
+        }
+
+        newVertices[5] = newVertices[0]; // 처음 점으로 닫기
+        lineRenderer.SetPositions(newVertices);
+
+        // 내부를 채우기 위한 Mesh 설정
+        Vector3[] meshVertices = new Vector3[6]; // 중앙점 + 5개 꼭짓점
+        int[] triangles = new int[15]; // 삼각형 5개 (3개씩)
+
+        meshVertices[0] = Vector3.zero; // 중앙점
+        for (int i = 0; i < 5; i++)
+        {
+            meshVertices[i + 1] = newVertices[i];
+
+            triangles[i * 3] = 0;
+            triangles[i * 3 + 1] = i + 1;
+            triangles[i * 3 + 2] = (i + 1) % 5 + 1;
+        }
+
+        // 마지막 삼각형이 제대로 연결되도록 수정
+        triangles[12] = 0;
+        triangles[13] = 5;
+        triangles[14] = 1;
+
+        mesh.Clear();
+        mesh.vertices = meshVertices;
+        mesh.triangles = triangles;
+
+        // 내부 색상
+        meshFilter.GetComponent<MeshRenderer>().material = meshMaterial;
     }
 
     float GetValueFromDict(Dictionary<string, object> data, string key)

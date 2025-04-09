@@ -49,13 +49,6 @@ public class TestPanelController : MonoBehaviour
         selectedGender = gender;
         isGenderSelected = true;
 
-        // 선택한 버튼 강조 효과 (테두리 굵게)
-        Outline selectedOutline = selectedButton.GetComponent<Outline>();
-        Outline otherOutline = otherButton.GetComponent<Outline>();
-
-        if (selectedOutline != null) selectedOutline.effectColor = Color.black;
-        if (otherOutline != null) otherOutline.effectColor = Color.white;
-
         CheckNextButton();
     }
 
