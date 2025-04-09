@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: ce6d0ccd7b1a46348b21f86066c07950
+guid: 069db03e01684264493344d513b112a0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5698101218374806946
-    second: android_light_rd_na@4x_0
+      213: 6715485281353169190
+    second: free-icon-add-to-cart-3907097_0
+  - first:
+      213: 6187833277070262112
+    second: free-icon-add-to-cart-3907097_1
+  - first:
+      213: -7614687866563653034
+    second: free-icon-add-to-cart-3907097_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,23 +132,67 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: android_light_rd_na@4x_0
+      name: free-icon-add-to-cart-3907097_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 160
-        height: 160
+        x: 30
+        y: 57
+        width: 452
+        height: 403
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2ad63774ed8b31f40800000000000000
-      internalID: 5698101218374806946
+      spriteID: 6297b618842323d50800000000000000
+      internalID: 6715485281353169190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: free-icon-add-to-cart-3907097_1
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 66
+        width: 66
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06f3d19b4999fd550800000000000000
+      internalID: 6187833277070262112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: free-icon-add-to-cart-3907097_2
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 71
+        width: 71
+        height: 67
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6521ffdcab1335690800000000000000
+      internalID: -7614687866563653034
       vertices: []
       indices: 
       edges: []
@@ -151,7 +201,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 6945fcd9014da3a409428fd26d43ef6d
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +211,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      android_light_rd_na@4x_0: 5698101218374806946
+      free-icon-add-to-cart-3907097_0: 6715485281353169190
+      free-icon-add-to-cart-3907097_1: 6187833277070262112
+      free-icon-add-to-cart-3907097_2: -7614687866563653034
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

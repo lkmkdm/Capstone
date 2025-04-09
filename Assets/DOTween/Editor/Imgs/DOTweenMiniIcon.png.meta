@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ce6d0ccd7b1a46348b21f86066c07950
+guid: 69cbf84b6b2b2fb43a2ac27557249863
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5698101218374806946
-    second: android_light_rd_na@4x_0
+      213: 3691463601059337291
+    second: DOTweenMiniIcon_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: android_light_rd_na@4x_0
+      name: DOTweenMiniIcon_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 160
-        height: 160
+        width: 9
+        height: 9
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2ad63774ed8b31f40800000000000000
-      internalID: 5698101218374806946
+      spriteID: b441d624696ba3330800000000000000
+      internalID: 3691463601059337291
       vertices: []
       indices: 
       edges: []
@@ -160,8 +160,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      android_light_rd_na@4x_0: 5698101218374806946
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
