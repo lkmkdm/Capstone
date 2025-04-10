@@ -15,6 +15,11 @@ public class ChangeScene : MonoBehaviour
         SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
     }
 
+    public void GoToMainScreen()
+    {
+        LoadScene("MainScreen");
+    }
+
     // 각 버튼에 연결된 씬 로드 함수들
     public void GameList()
     {

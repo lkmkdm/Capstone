@@ -31,9 +31,10 @@ public class RadarChart : MonoBehaviour
         db = FirebaseFirestore.DefaultInstance;
         auth = FirebaseAuth.DefaultInstance;
 
-        //테스트용 
+        //테스트용(테스트 계정 사용 시 바로 밑에 if else 문 주석처리 필수)
         //userEmail = "testuser@example.com";
 
+        //테스트용 사용 시 주석 처리하기
         if (auth.CurrentUser != null)
         {
             userEmail = auth.CurrentUser.Email;
@@ -44,6 +45,7 @@ public class RadarChart : MonoBehaviour
         {
             Debug.LogError("Firebase Authentication: 로그인된 사용자가 없습니다!");
         }
+        //테스트용 사용 시 여기까지 주석 처리
 
         // LineRenderer 및 MeshFilter 초기화
         lineRenderer = GetComponent<LineRenderer>();
@@ -154,7 +156,7 @@ public class RadarChart : MonoBehaviour
     {
         Vector3[] newVertices = new Vector3[6];
 
-        float chartRadius = 270f;  // 오각형 외곽 크기에 맞게 조절..이게 최선임(Pentagon들 Pos Y 값은 25로 설정)
+        float chartRadius = 270f;  // 오각형 외곽 크기에 맞게 조절..이게 최선임(Pentagon들 Pos Y 값은 25 근처로 설정)
 
         for (int i = 0; i < 5; i++)
         {

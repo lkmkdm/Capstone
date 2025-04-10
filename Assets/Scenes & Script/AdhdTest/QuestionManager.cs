@@ -42,34 +42,34 @@ public class QuestionManager : MonoBehaviour
     private int currentQuestionIndex = 0; // 현재 질문 위치
 
     // 7단계 점수 리스트
-    private readonly float[] scoreValues = { 0f, 2.78f, 5.56f, 8.34f, 11.12f, 13.90f, 16.67f };
+    private readonly float[] scoreValues = { 16.67f, 13.90f, 11.12f, 8.34f, 5.56f, 2.78f, 0f };
 
-    // 질문 리스트
+    // 질문 리스트(최종)
     private string[] questions = {
-        "0집중하는 것이 어렵다고 느낀다.",
-        "1과제를 끝까지 마무리하는 것이 어렵다.",
-        "2주의가 산만해지는 경우가 많다.",
-        "3한 가지 일에 오래 집중할 수 없다.",
-        "4계획을 세우는 것이 어렵다.",
-        "5결정을 내리는 것이 어렵다.",
-        "6기억력이 좋지 않다고 느낀다.",
-        "7자주 물건을 잃어버린다.",
-        "8다른 사람의 말을 듣다가 금방 딴 생각을 한다.",
-        "9집중해야 할 때 쉽게 산만해진다.",
-        "10계획한 일을 자주 잊어버린다.",
-        "11일을 체계적으로 수행하는 것이 어렵다.",
-        "12여러 가지 일을 동시에 하면 실수가 많다.",
-        "13시간 관리를 잘 하지 못한다.",
-        "14해야 할 일을 미루는 경우가 많다.",
-        "15자신이 한 행동을 종종 후회한다.",
-        "16다른 사람보다 감정 기복이 심하다고 느낀다.",
-        "17참을성이 부족하다고 느낀다.",
-        "18감정 조절이 어렵다고 생각한다.",
-        "19남들이 하는 말을 쉽게 오해한다.",
-        "20친구 관계를 유지하는 것이 어렵다.",
-        "21사회적인 상황에서 불안감을 느낀다.",
-        "22자신감이 부족하다고 생각한다.",
-        "23새로운 환경에 적응하는 것이 어렵다.",
+        "정밀하거나 세심한 일에 집중하기 힘들다.",
+        "조심성이 없어 실수를 많이 하는 편이다.",
+        "주의가 산만해지는 경우가 많다.",
+        "다른 사람의 말을 듣다가 금방 딴 생각을 한다.",
+        "지루함을 잘 견디지 못한다.",
+        "어떤 일에 과도하게 집중한다.",
+        "상황을 고려하지 않고 머리에 떠오르는 생각을 즉각적으로 말한다.",
+        "돈을 충동적으로 쓴다.",
+        "가족 중 우울증, 조울증, 약물남용, 충동조절장애가 있는 사람이 있다.",
+        "불필요한 걱정이 많다.",
+        "다른 사람보다 감정 기복이 심하다고 느낀다.",
+        "술, 담배, 게임, 쇼핑, 일, 음식 등에 깊이 빠져든다.",
+        "계획한 일을 잊어버릴 때가 있다.",
+        "기억력이 좋지 않다고 느낀다.",
+        "물건을 자주 잊어버린다.",
+        "약속이나 해야 할 일을 잊어버려 곤란을 겪은적이 있다.",
+        "어제 어떤 음식을 먹었는지 기억이 잘 안난다.",
+        "물건을 엉뚱한 곳에 두거나 어디에 두었는지 잘 모르겠다.",
+        "과제를 끝까지 마무리하는 것이 어렵다.",
+        "시간 관리를 잘 하지 못한다.",
+        "해야 할 일을 미루는 경우가 많다.",
+        "새로운 일을 시작하고 준비하기까지 오래 걸린다.",
+        "모임이나 약속 시간에 자주 늦는다.",
+        "여러 가지 일을 동시에 하면 실수가 많다.",
     };
 
     private List<int> selectedButtonIndices = new List<int>(); // 선택된 버튼 인덱스 저장
@@ -369,22 +369,15 @@ public class QuestionManager : MonoBehaviour
             .Document("original_ability");
 
         // 잠재력 계산: 능력치 * 나이 보정 * 랜덤
-        float rawScore = original_concentration * original_impulsiveness * original_memory * original_processingspeed;
-        float ageModifier = Mathf.Clamp(1.5f - (selectedAge / 100f), 0.8f, 1.5f);
-        float randomFactor = Random.Range(0.9f, 1.1f);
+        float rawScore = original_concentration + original_impulsiveness + original_memory + original_processingspeed;
 
-        float finalPotential;
+        // 나이 보정 (20세 기준 1.0 → 나이 많을수록 감소)
+        float ageModifier = Mathf.Clamp(1.2f - (selectedAge / 100f), 0.8f, 1.2f);
+        float randomFactor = Random.Range(0.95f, 1.05f);
 
-        if (rawScore < 25f)
-        {
-            finalPotential = Random.Range(50f, 65f);
-        }
-        else
-        {
-            float potentialRaw = rawScore * ageModifier * randomFactor;
-            float normalized = Mathf.Clamp01(potentialRaw / 625f);
-            finalPotential = 50f + normalized * 50f;
-        }
+        float potentialRaw = rawScore * ageModifier * randomFactor;
+        float normalized = Mathf.Clamp01(potentialRaw / 400f); // 최대 400 기준
+        float finalPotential = 50f + normalized * 50f;
 
         finalPotential = Mathf.Round(finalPotential * 10f) / 10f;
 

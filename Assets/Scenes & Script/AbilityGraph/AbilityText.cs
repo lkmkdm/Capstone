@@ -37,9 +37,10 @@ public class FirebaseDataToUI : MonoBehaviour
         db = FirebaseFirestore.DefaultInstance;
         auth = FirebaseAuth.DefaultInstance;
 
-        //테스트용 
+        //테스트용(테스트 계정 사용 시 바로 밑에 if else 문 주석처리 필수)
         //userEmail = "testuser@example.com";
 
+        //테스트용 사용 시 주석 처리하기
         if (auth.CurrentUser != null)
         {
             userEmail = auth.CurrentUser.Email;
@@ -50,7 +51,8 @@ public class FirebaseDataToUI : MonoBehaviour
         {
             Debug.LogError("Firebase Authentication: 로그인된 사용자가 없습니다!");
         }
-        
+        //테스트용 사용 시 여기까지 주석 처리
+
         LoadDataFromFirebase();
     }
 
@@ -239,6 +241,5 @@ public class FirebaseDataToUI : MonoBehaviour
 
         StartCoroutine(AnimateStatusText(statusText, status, color));
     }
-
 
 }
