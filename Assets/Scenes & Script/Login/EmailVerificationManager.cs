@@ -10,15 +10,20 @@ public class EmailVerificationManager : MonoBehaviour
     [Header("Panels")]
     public GameObject RegisterPanel;
     public GameObject VerificationPanel;
+    public GameObject CompletePanel;
 
     [Header("UI Elements")]
     public TMP_InputField emailInputField;
     public TMP_InputField passwordInputField;
+    public TMP_InputField nameInputField;
     public TMP_Text timerText;
+    public TMP_Text UserEmailText;
+    public TMP_Text UserNameText;
     public Button verifyButton;
+    public Button gotoTestButton;
 
     [Header("Validator")]
-    public InputFieldValidator validator; // 👉 오른쪽 스크립트를 참조하는 변수
+    public RegisterManager validator;
 
     private FirebaseAuth auth;
     private FirebaseUser currentUser;
@@ -31,18 +36,17 @@ public class EmailVerificationManager : MonoBehaviour
         auth = FirebaseAuth.DefaultInstance;
         RegisterPanel.SetActive(true);
         VerificationPanel.SetActive(false);
+        CompletePanel.SetActive(false);
     }
 
     public void OnClickNext()
     {
         Debug.Log("✅ [OnClickNext] 호출됨");
 
-        // 👉 오른쪽 검사 먼저 실행
         validator.ValidateFields();
 
         Debug.Log("✅ [OnClickNext] validator.AllFieldsValid(): " + validator.AllFieldsValid());
 
-        // 유효하지 않으면 다음 단계로 진행 금지
         if (!validator.AllFieldsValid())
         {
             Debug.Log("❌ [OnClickNext] 필드 유효하지 않음. 진행 중단");
@@ -66,6 +70,7 @@ public class EmailVerificationManager : MonoBehaviour
                 {
                     if (sendTask.IsCompleted && !sendTask.IsFaulted)
                     {
+                        UserEmailText.text = emailInputField.text;
                         Debug.Log("✅ 이메일 인증 발송 완료");
                         RegisterPanel.SetActive(false);
                         VerificationPanel.SetActive(true);
@@ -113,13 +118,17 @@ public class EmailVerificationManager : MonoBehaviour
     {
         if (currentUser != null)
         {
-            currentUser.ReloadAsync().ContinueWith(task =>
+            currentUser.ReloadAsync().ContinueWithOnMainThread(task =>
             {
                 if (task.IsCompleted && currentUser.IsEmailVerified)
                 {
                     Debug.Log("✅ 이메일 인증 완료! 사용자 유지");
                     timerRunning = false;
                     PlayerPrefs.DeleteKey("email_verification_start_time");
+
+                    UserNameText.text = $"환영합니다! {nameInputField.text}님!";
+                    VerificationPanel.SetActive(false);
+                    CompletePanel.SetActive(true);
 
                     // 인증 후 다음 씬 이동 등의 추가 로직
                 }
@@ -149,5 +158,10 @@ public class EmailVerificationManager : MonoBehaviour
                 }
             });
         }
+    }
+
+    public void OnClickGotoTest()
+    {
+        // 추후 테스트 씬 이동 로직 추가 예정
     }
 }

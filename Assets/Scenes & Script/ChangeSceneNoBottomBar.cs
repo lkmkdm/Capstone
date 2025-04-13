@@ -3,15 +3,21 @@ using UnityEngine.SceneManagement;
 
 public class ChangeSceneNoBottomBar : MonoBehaviour
 {
-    // 씬 이름에 따라 원하는 씬으로 전환할 수 있는 함수들
-
     public void CreateAccount()
     {
+        // 현재 씬 이름을 저장
+        SceneHistory.PreviousSceneName = SceneManager.GetActiveScene().name;
+
+        // 씬 전환
         SceneManager.LoadScene("CreateAccount");
     }
 
     public void Login()
     {
+        // 마찬가지로 현재 씬 이름을 저장
+        SceneHistory.PreviousSceneName = SceneManager.GetActiveScene().name;
+
+        // 씬 전환
         SceneManager.LoadScene("Login");
     }
 

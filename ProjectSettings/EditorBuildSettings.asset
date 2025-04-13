@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes & Script/Login/GoogleSignIn.unity
+    path: Assets/Scenes & Script/Login/Login.unity
     guid: cf837343ac8d3484da0d9d2ec1d25ec9
+  - enabled: 1
+    path: Assets/Scenes & Script/Login/CreateAccount.unity
+    guid: 1b7a4dbada992a54dafb201a383cf3bd
   - enabled: 1
     path: Assets/Scenes & Script/Login/ServiceContent.unity
     guid: 1c699a44cc0068c479f4561ba3c3ba99
@@ -32,15 +35,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes & Script/MainScreen/MainScreen.unity
     guid: c9660e8052b4aa9429d7c7d708102677
-  - enabled: 0
-    path: Assets/Scenes & Script/BottomBar/Games.unity
-    guid: 74b9fd65657989b4f82a821e1897b375
-  - enabled: 0
-    path: Assets/Scenes & Script/BottomBar/User.unity
-    guid: b7796b7cb2b1c7a4d9707f46893df4f7
-  - enabled: 0
-    path: Assets/Scenes & Script/BottomBar/Settings.unity
-    guid: 1b1eb87c5d040074080a23c6aa5f59c7
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 958e943e6fb2b614c8cc4bec1ef86844, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 52fd1eba54192984d8d201f5571f9c06, type: 2}

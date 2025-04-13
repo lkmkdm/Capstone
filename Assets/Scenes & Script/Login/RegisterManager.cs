@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using System.Text.RegularExpressions;
 
-public class InputFieldValidator : MonoBehaviour
+public class RegisterManager : MonoBehaviour
 {
     [Header("Sprites")]
     public Sprite errorSprite;

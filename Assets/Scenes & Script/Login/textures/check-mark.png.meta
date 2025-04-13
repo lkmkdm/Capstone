@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b3ccd1124b5e5224a956780172fe27b9
+guid: b1b526a06e9b8e747bc55046a8e53387
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4554590910862451457
-    second: Drawing-8.sketchpad_0
+      213: -1096105371027078061
+    second: check-mark_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Drawing-8.sketchpad_0
+      name: check-mark_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 1199
-        width: 4478
-        height: 4477
+        x: 11
+        y: 75
+        width: 490
+        height: 362
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 103ed2b5d48253f30800000000000000
-      internalID: 4554590910862451457
+      spriteID: 3548883f8f9d9c0f0800000000000000
+      internalID: -1096105371027078061
       vertices: []
       indices: 
       edges: []
@@ -160,8 +160,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Drawing-8.sketchpad_0: 4554590910862451457
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
