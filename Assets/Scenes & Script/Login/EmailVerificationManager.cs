@@ -4,6 +4,7 @@ using TMPro;
 using Firebase.Auth;
 using Firebase.Extensions;
 using System;
+using UnityEngine.SceneManagement;
 
 public class EmailVerificationManager : MonoBehaviour
 {
@@ -162,6 +163,6 @@ public class EmailVerificationManager : MonoBehaviour
 
     public void OnClickGotoTest()
     {
-        // 추후 테스트 씬 이동 로직 추가 예정
+        SceneManager.LoadScene("AdhdTest");
     }
 }

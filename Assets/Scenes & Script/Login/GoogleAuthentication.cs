@@ -1,26 +1,21 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 using Google;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
-using System.Net;
 using Firebase;
 using Firebase.Extensions;
-using Firebase.Auth; // Firebase 인증을 위한 네임스페이스 추가
+using Firebase.Auth;
+using Firebase.Firestore;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GoogleAuthentication : MonoBehaviour
 {
-    public string imageURL;
-    public TMP_Text userNameTxt, userEmailTxt;
-    public Image profilePic;
-    public GameObject loginPanel, profilePanel;
-    private GoogleSignInConfiguration configuration;
     public string webClientId = "481102876130-ci87efh89dkoodbp5fiemqd250lrplgs.apps.googleusercontent.com";
-
-    private FirebaseAuth auth; // Firebase 인증 객체
+    private GoogleSignInConfiguration configuration;
+    private FirebaseAuth auth;
+    private FirebaseFirestore db;
 
     void Awake()
     {
@@ -29,6 +24,7 @@ public class GoogleAuthentication : MonoBehaviour
         {
             FirebaseApp firebaseApp = FirebaseApp.DefaultInstance;
             auth = FirebaseAuth.DefaultInstance;
+            db = FirebaseFirestore.DefaultInstance;
         });
 
         configuration = new GoogleSignInConfiguration
@@ -51,94 +47,79 @@ public class GoogleAuthentication : MonoBehaviour
     {
         if (task.IsFaulted)
         {
-            using (IEnumerator<System.Exception> IEnumerator =
-                task.Exception.InnerExceptions.GetEnumerator())
+            using (IEnumerator<System.Exception> enumerator = task.Exception.InnerExceptions.GetEnumerator())
             {
-                if (IEnumerator.MoveNext())
+                if (enumerator.MoveNext())
                 {
-                    GoogleSignIn.SignInException error =
-                        (GoogleSignIn.SignInException)IEnumerator.Current;
-                    Debug.LogError("Got Error: " + error.Status + " " + error.Message);
+                    GoogleSignIn.SignInException error = (GoogleSignIn.SignInException)enumerator.Current;
+                    Debug.LogError("Google Sign-in Error: " + error.Status + " " + error.Message);
                 }
                 else
                 {
-                    Debug.LogError("Got unexpected exception!?" + task.Exception);
+                    Debug.LogError("Unexpected sign-in exception: " + task.Exception);
                 }
             }
         }
         else if (task.IsCanceled)
         {
-            Debug.LogError("Cancelled");
+            Debug.LogError("Google Sign-in was canceled.");
         }
         else
         {
-            StartCoroutine(UpdateUI(task.Result));
-
-            // Firebase 인증
             AuthenticateWithFirebase(task.Result);
         }
-    }
-
-    IEnumerator UpdateUI(GoogleSignInUser user)
-    {
-        Debug.Log("Welcome: " +  user.DisplayName + "!");
-
-        userNameTxt.text = user.DisplayName;
-        userEmailTxt.text = user.Email;
-        imageURL = user.ImageUrl.ToString();
-
-        loginPanel.SetActive(false);
-        yield return null;
-        profilePanel.SetActive(true);
-
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(imageURL);
-        yield return request.SendWebRequest();
-        Texture2D downloadedTexture = DownloadHandlerTexture.GetContent(request);
-        Rect rect = new Rect(0, 0, downloadedTexture.width, downloadedTexture.height);
-        Vector2 pivot = new Vector2(0.5f, 0.5f);
-        profilePic.sprite = Sprite.Create(downloadedTexture, rect, pivot);
     }
 
     // Firebase 인증 함수
     private void AuthenticateWithFirebase(GoogleSignInUser googleUser)
     {
         string idToken = googleUser.IdToken;
-
         Credential credential = GoogleAuthProvider.GetCredential(idToken, null);
+
         auth.SignInWithCredentialAsync(credential).ContinueWithOnMainThread(task =>
         {
-            if (task.IsCanceled)
+            if (task.IsCanceled || task.IsFaulted)
             {
-                Debug.LogError("Sign-in with Firebase was canceled.");
-                return;
-            }
-            if (task.IsFaulted)
-            {
-                Debug.LogError("Sign-in with Firebase failed: " + task.Exception);
+                Debug.LogError("Firebase Sign-in failed: " + task.Exception);
                 return;
             }
 
             FirebaseUser newUser = task.Result;
-            Debug.Log("User signed in successfully: " + newUser.DisplayName);
+            Debug.Log("Firebase login success: " + newUser.Email);
+
+            // Firestore에서 설문 결과 확인
+            CheckSurveyResult(newUser.Email);
         });
     }
 
-
-    public void OnSignOut()
+    private void CheckSurveyResult(string userEmail)
     {
-        userNameTxt.text = "";
-        userEmailTxt.text = "";
+        DocumentReference docRef = db
+            .Collection("users")
+            .Document(userEmail)
+            .Collection("personal_information")
+            .Document("info");
 
-        imageURL = "";
-        loginPanel.SetActive(true);
-        profilePanel.SetActive(false);
-        Debug.Log("Calling SignOut");
+        docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                Debug.LogError("Failed to get Firestore document: " + task.Exception);
+                return;
+            }
 
-        // Firebase에서 로그아웃
-        auth.SignOut();
-
-        // Google 로그인에서 로그아웃
-        GoogleSignIn.DefaultInstance.SignOut();
+            DocumentSnapshot snapshot = task.Result;
+            if (snapshot.Exists && snapshot.ContainsField("adhd_test") && snapshot.GetValue<bool>("adhd_test"))
+            {
+                Debug.Log("설문 완료 사용자입니다. MainScreen으로 이동합니다.");
+                SceneManager.LoadScene("MainScreen");
+            }
+            else
+            {
+                Debug.Log("설문 미완료 사용자입니다. AdhdTest로 이동합니다.");
+                SceneManager.LoadScene("AdhdTest");
+            }
+        });
     }
 
 }

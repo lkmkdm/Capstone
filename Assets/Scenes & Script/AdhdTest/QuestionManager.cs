@@ -316,7 +316,8 @@ public class QuestionManager : MonoBehaviour
             difficulty = difficulty,
             gender = selectedGender,
             name = userName,
-            userid = userID
+            userid = userID,
+            adhd_test = true
         };
 
         userDocRef.SetAsync(userData).ContinueWith(task =>

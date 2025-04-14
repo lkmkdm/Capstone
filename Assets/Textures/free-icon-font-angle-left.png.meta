@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      free-icon-font-angle-left_0: -839475049866434841
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
