@@ -129,12 +129,12 @@ TextureImporter:
       name: free-icon-font-angle-left_0
       rect:
         serializedVersion: 2
-        x: 144
+        x: 94
         y: 0
-        width: 245
+        width: 345
         height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 2c228ec17dac39a44a956d7c2ae99d81
     internalID: 0
     vertices: []
     indices: 

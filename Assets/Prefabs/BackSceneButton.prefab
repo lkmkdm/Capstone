@@ -13,9 +13,8 @@ GameObject:
   - component: {fileID: 9198804886404566527}
   - component: {fileID: 4948070870946079794}
   - component: {fileID: 3297353322296554092}
-  - component: {fileID: 5969029495113431916}
   m_Layer: 5
-  m_Name: BackButton
+  m_Name: BackSceneButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -470, y: 840}
-  m_SizeDelta: {x: 20, y: 42}
+  m_SizeDelta: {x: 28, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8311959508780417269
 CanvasRenderer:
@@ -132,17 +131,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a408012afbdc09a4c9f1d6feada10a04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5969029495113431916
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7104137057115277013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1b9eb592d027da479a5c7d0f22b1bd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
