@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      free-icon-exclamation-mark-179386_0: -5979298608864438248
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
