@@ -382,7 +382,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1507725222}
           m_TargetAssemblyTypeName: ChangeScene, Assembly-CSharp
-          m_MethodName: GoToGoogleSignIn
+          m_MethodName: GoToLogin
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

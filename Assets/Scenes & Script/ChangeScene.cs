@@ -41,8 +41,8 @@ public class ChangeScene : MonoBehaviour
         LoadScene("ServiceContent");
     }
 
-    public void GoToGoogleSignIn()
+    public void GoToLogin()
     {
-        LoadScene("GoogleSignIn");
+        LoadScene("Login");
     }
 }

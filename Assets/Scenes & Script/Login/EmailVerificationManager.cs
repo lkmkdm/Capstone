@@ -4,26 +4,34 @@ using TMPro;
 using Firebase.Auth;
 using Firebase.Extensions;
 using System;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class EmailVerificationManager : MonoBehaviour
 {
     [Header("Panels")]
     public GameObject RegisterPanel;
     public GameObject VerificationPanel;
+    public GameObject CompletePanel;
 
     [Header("UI Elements")]
     public TMP_InputField emailInputField;
     public TMP_InputField passwordInputField;
+    public TMP_InputField nameInputField;
     public TMP_Text timerText;
+    public TMP_Text UserEmailText;
+    public TMP_Text UserNameText;
     public Button verifyButton;
+    public Button gotoTestButton;
+    public Button BackPanelButton;
 
     [Header("Validator")]
-    public InputFieldValidator validator; // 👉 오른쪽 스크립트를 참조하는 변수
+    public RegisterManager validator;
 
     private FirebaseAuth auth;
     private FirebaseUser currentUser;
 
-    private float timerDuration = 300f; // 5분
+    private float timerDuration = 3600f; // 1시간
     private bool timerRunning = false;
 
     void Start()
@@ -31,42 +39,47 @@ public class EmailVerificationManager : MonoBehaviour
         auth = FirebaseAuth.DefaultInstance;
         RegisterPanel.SetActive(true);
         VerificationPanel.SetActive(false);
+        CompletePanel.SetActive(false);
+
+        if (BackPanelButton != null)
+        {
+            BackPanelButton.onClick.AddListener(OnClickBackPanel);
+        }
     }
 
     public void OnClickNext()
     {
         Debug.Log("✅ [OnClickNext] 호출됨");
 
-        // 👉 오른쪽 검사 먼저 실행
         validator.ValidateFields();
 
-        Debug.Log("✅ [OnClickNext] validator.AllFieldsValid(): " + validator.AllFieldsValid());
-
-        // 유효하지 않으면 다음 단계로 진행 금지
         if (!validator.AllFieldsValid())
         {
-            Debug.Log("❌ [OnClickNext] 필드 유효하지 않음. 진행 중단");
+            Debug.Log("❌ [OnClickNext] 필드 유효하지 않음. 중단");
             return;
         }
 
+        // ✅ 로딩창 표시
+        if (LoadingScreenController.Instance != null)
+            LoadingScreenController.Instance.loadingPanel.SetActive(true);
+
+        // ✅ 회원가입 처리
         string email = emailInputField.text;
         string password = passwordInputField.text;
-
-        Debug.Log("📧 [OnClickNext] 이메일: " + email);
-        Debug.Log("🔑 [OnClickNext] 비밀번호: " + password);
 
         auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task =>
         {
             if (task.IsCompleted && !task.IsFaulted && !task.IsCanceled)
             {
                 currentUser = task.Result.User;
-                Debug.Log("✅ [Firebase] 회원가입 성공");
+                Debug.Log("✅ 회원가입 성공");
 
                 currentUser.SendEmailVerificationAsync().ContinueWithOnMainThread(sendTask =>
                 {
                     if (sendTask.IsCompleted && !sendTask.IsFaulted)
                     {
-                        Debug.Log("✅ 이메일 인증 발송 완료");
+                        UserEmailText.text = emailInputField.text;
+
                         RegisterPanel.SetActive(false);
                         VerificationPanel.SetActive(true);
 
@@ -78,11 +91,19 @@ public class EmailVerificationManager : MonoBehaviour
                     {
                         Debug.LogError("❌ 이메일 발송 실패: " + sendTask.Exception);
                     }
+
+                    // ✅ 로딩창 숨기기
+                    if (LoadingScreenController.Instance != null)
+                        LoadingScreenController.Instance.loadingPanel.SetActive(false);
                 });
             }
             else
             {
                 Debug.LogError("❌ 회원가입 실패: " + task.Exception);
+
+                // ✅ 실패 시에도 로딩창 닫기
+                if (LoadingScreenController.Instance != null)
+                    LoadingScreenController.Instance.loadingPanel.SetActive(false);
             }
         });
     }
@@ -113,15 +134,23 @@ public class EmailVerificationManager : MonoBehaviour
     {
         if (currentUser != null)
         {
-            currentUser.ReloadAsync().ContinueWith(task =>
+            if (LoadingScreenController.Instance != null)
+                LoadingScreenController.Instance.loadingPanel.SetActive(true);
+
+            currentUser.ReloadAsync().ContinueWithOnMainThread(task =>
             {
+                if (LoadingScreenController.Instance != null)
+                    LoadingScreenController.Instance.loadingPanel.SetActive(false);
+
                 if (task.IsCompleted && currentUser.IsEmailVerified)
                 {
                     Debug.Log("✅ 이메일 인증 완료! 사용자 유지");
                     timerRunning = false;
                     PlayerPrefs.DeleteKey("email_verification_start_time");
 
-                    // 인증 후 다음 씬 이동 등의 추가 로직
+                    UserNameText.text = $"환영합니다! {nameInputField.text}님!";
+                    VerificationPanel.SetActive(false);
+                    CompletePanel.SetActive(true);
                 }
                 else
                 {
@@ -149,5 +178,16 @@ public class EmailVerificationManager : MonoBehaviour
                 }
             });
         }
+    }
+
+    public void OnClickGotoTest()
+    {
+        SceneManager.LoadScene("AdhdTest");
+    }
+
+    public void OnClickBackPanel()
+    {
+        RegisterPanel.SetActive(true);
+        VerificationPanel.SetActive(false);
     }
 }

@@ -1,5 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scenes & Script/Games/Game_2.unity.meta
 guid: e1aed8fc1aa52ff499402bf2f1dac35b
+========
+guid: fd82a827d2adb16469fe88e1af8c95f7
+folderAsset: yes
+>>>>>>>> 23b17d35796537daf1f3869d5c53eff244f9a5f3:Assets/Prefabs/BackSceneButton.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
